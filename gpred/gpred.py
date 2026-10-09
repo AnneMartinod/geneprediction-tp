@@ -226,15 +226,26 @@ def main() -> None: # pragma: no cover
     args = get_arguments()
     # Let us do magic in 5' to 3'
     
-    # Don't forget to uncomment !!!
-    # Call these function in the order that you want
-    # We reverse and complement
-    #sequence_rc = reverse_complement(sequence)
-    # Call to output functions
-    #write_genes_pos(args.predicted_genes_file, probable_genes)
-    #write_genes(args.fasta_file, sequence, probable_genes, sequence_rc, probable_genes_comp)
-
-
+    sequence = read_fasta(args.genome_file)
+    probable_genes = predict_genes(sequence, start_regex, stop_regex, shine_regex,
+                                   args.min_gene_len,
+                                   args.max_shine_dalgarno_distance,
+                                   args.min_gap)
+ 
+    sequence_rc = reverse_complement(sequence)
+    probable_genes_comp = predict_genes(sequence_rc, start_regex, stop_regex,
+                                        shine_regex, args.min_gene_len,
+                                        args.max_shine_dalgarno_distance,
+                                        args.min_gap)
+ 
+    seq_len = len(sequence)
+    probable_genes_comp_corrected = [[seq_len - stop + 1, seq_len - start + 1]
+                                     for start, stop in probable_genes_comp]
+ 
+    write_genes_pos(args.predicted_genes_file,
+                    probable_genes + probable_genes_comp_corrected)
+    write_genes(args.fasta_file, sequence, probable_genes, sequence_rc,
+                probable_genes_comp)
 
 if __name__ == '__main__':
     main()
