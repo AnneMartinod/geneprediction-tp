@@ -115,6 +115,11 @@ def has_shine_dalgarno(shine_regex: Pattern, sequence: str, start: int, max_shin
     :param max_shine_dalgarno_distance: (int) Maximum distance of the shine dalgarno to the start position
     :return: (boolean) true -> has a shine dalgarno upstream to the gene, false -> no
     """
+    search_start = start - max_shine_dalgarno_distance
+    if search_start < 0:
+        return False
+    search_stop = start - 6
+    return shine_regex.search(sequence, search_start, search_stop) is not None
     pass
 
 
