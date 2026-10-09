@@ -54,6 +54,9 @@ def get_arguments(): # pragma: no cover
                         help="Fasta file giving sequence of predicted genes")
     return parser.parse_args()
 
+def fill(text: str, width: int = 80) -> str:
+    """Split text with a line return to respect fasta format"""
+    return os.linesep.join(text[i:i+width] for i in range(0, len(text), width))
 
 def read_fasta(fasta_file: Path) -> str:
     """Extract genome sequence from fasta files.
@@ -96,6 +99,10 @@ def find_stop(stop_regex: Pattern, sequence: str, start: int) -> Union[int, None
     :param start: (int) Start position of the research
     :return: (int) If exist, position of the stop codon. Otherwise None. 
     """
+    for match in stop_regex.finditer(sequence, start):
+        if (match.start(0) - start) % 3 == 0:
+            return match.start(0)
+    return None
     pass
 
 
