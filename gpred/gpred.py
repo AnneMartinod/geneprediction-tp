@@ -81,6 +81,10 @@ def find_start(start_regex: Pattern, sequence: str, start: int, stop: int) -> Un
     :param stop: (int) Stop position of the research
     :return: (int) If exist, position of the start codon. Otherwise None. 
     """
+    match = start_regex.search(sequence, start, stop)
+    if match is None:
+        return None
+    return match.start(0)
     pass
 
 
