@@ -61,6 +61,14 @@ def read_fasta(fasta_file: Path) -> str:
     :param fasta_file: (Path) Path to the fasta file.
     :return: (str) Sequence from the genome. 
     """
+    sequence = []
+    with Path(fasta_file).open("rt") as fasta:
+        for line in fasta:
+            line = line.strip()
+            if not line or line.startswith(">"):
+                continue
+            sequence.append(line.upper())
+    return "".join(sequence)
     pass
 
 
